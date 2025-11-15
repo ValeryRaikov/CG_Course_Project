@@ -95,7 +95,7 @@ This project is licensed under the MIT License. All dependencies fall under thei
 ## Credits
 [Vladimir Kucev](https://github.com/savety6) - For the CMake build.
 
-
+---
 
 # 3D Анимиран Робот - Курсов Проект по Компютърна Графика (ОПИСАНИЕ)
 
@@ -109,8 +109,6 @@ This project is licensed under the MIT License. All dependencies fall under thei
 
 ### Документация
 **[ПЪЛНА ДОКУМЕНТАЦИЯ НА ПРОЕКТА](121222139_CP_1_CG.docx)** - Кликнете за да изтеглите подробната документация
-
----
 
 ## Възможности на проекта
 
