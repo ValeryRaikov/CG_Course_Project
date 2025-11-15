@@ -94,3 +94,7 @@ This project is licensed under the MIT License. All dependencies fall under thei
 
 ## Credits
 [Vladimir Kucev](https://github.com/savety6) - For the CMake build.
+
+## Информация
+
+За направата на проекта е използван шаблона и github repository-то, което се използва и на упражненията по диспциплината. Всичко написано дотук важи и за стартирането на текущия проект, като в това repository са качени промените и допълненията по кода, които удовлетворяват изсикванията за курсов проект. За повече информация прочетете документацията на преокта.
