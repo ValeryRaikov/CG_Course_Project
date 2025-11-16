@@ -153,14 +153,14 @@ namespace cg
             // Нулиране на скоростите
             g_move_speed = 0.1f;
             g_rotation_speed = 2.0f;
+        }
 
-            if (ImGui::Button("Reset Rotation Only")) {
-                cg::robot.rotation = glm::vec3(0.0f);   // Нулиране само на завъртанията
-            }
+        if (ImGui::Button("Reset Rotation Only")) {
+            cg::robot.rotation = glm::vec3(0.0f);   // Нулиране само на завъртанията
+        }
 
-            if (ImGui::Button("Reset Scale Only")) {
-				cg::robot.scale = glm::vec3(1.0f);     // Нулиране само на скалирането
-            }
+        if (ImGui::Button("Reset Scale Only")) {
+            cg::robot.scale = glm::vec3(1.0f);     // Нулиране само на скалирането
         }
 
         ImGui::End(); // Край на прозореца "Robot Controls"
