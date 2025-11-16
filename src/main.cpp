@@ -144,6 +144,30 @@ static void key_callback(GLFWwindow* window,
             // - Движение по вертикалната ос надолу
             cg::robot.position.y -= g_move_speed;
             break;
+        
+        // НОВИ КОНТРОЛИ ЗА ЗАВЪРТАНЕ ПО РАЗЛИЧНИ ОСИ
+        case GLFW_KEY_R:    // Завъртане по X оста (надясно)
+            cg::robot.rotation.x += g_rotation_speed;
+            break;
+        case GLFW_KEY_F:    // Завъртане по X оста (наляво)
+            cg::robot.rotation.x -= g_rotation_speed;
+            break;
+        case GLFW_KEY_T:    // Завъртане по Z оста (надясно)
+            cg::robot.rotation.z += g_rotation_speed;
+            break;
+        case GLFW_KEY_G:    // Завъртане по Z оста (наляво)
+            cg::robot.rotation.z -= g_rotation_speed;
+            break;
+		case GLFW_KEY_Z:    // Нулиране на всички завъртания (връщане в изходна позиция)
+            cg::robot.rotation = glm::vec3(0.0f);
+            break;
+        // НОВИ КОНТРОЛИ ЗА СКАЛИРАНЕ
+        case GLFW_KEY_U:    // Увеличаване на скалирането
+            cg::robot.scale *= 1.1f;
+            break;
+        case GLFW_KEY_J:    // Намаляване на скалирането
+            cg::robot.scale /= 1.1f;
+            break;
         default:
             break;
         }
@@ -693,6 +717,7 @@ static void draw_robot()
     g_model = glm::rotate(g_model, glm::radians(cg::robot.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    g_model = glm::scale(g_model, cg::robot.scale);
 
 	// Таз (на дъното на хълбоците)
     g_model = glm::translate(g_model, glm::vec3(0.0f, cg::robot.hip_size.y / 2, 0.0f));

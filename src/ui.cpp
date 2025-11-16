@@ -62,6 +62,9 @@ namespace cg
         ImGui::Text("Rotation: (%.2f, %.2f, %.2f)",
             cg::robot.rotation.x, cg::robot.rotation.y, cg::robot.rotation.z);
 
+        ImGui::Text("Scale: (%.2f, %.2f, %.2f)",
+            cg::robot.scale.x, cg::robot.scale.y, cg::robot.scale.z);
+
         ImGui::Separator(); // Хоризонтална разделителна линия
 
         // Секция с инструкции за управление
@@ -69,7 +72,11 @@ namespace cg
         ImGui::Text("W/S - Move Forward/Back");        // Движение напред/назад
         ImGui::Text("A/D - Rotate Left/Right");        // Завъртане наляво/надясно
         ImGui::Text("Q/E - Strafe Left/Right");        // Странично движение
+        ImGui::Text("R/F - Rotate X Axis");            // Завъртане по X оста
+        ImGui::Text("T/G - Rotate Z Axis");            // Завъртане по Z оста
+        ImGui::Text("Z - Reset Rotation");             // Нулиране на завъртанията
         ImGui::Text("Space/Shift - Move Up/Down");     // Движение нагоре/надолу
+		ImGui::Text("U/J - Scale Up/Down");            // Скалиране нагоре/надолу
 
         ImGui::Separator();     // Хоризонтална разделителна линия
 
@@ -77,6 +84,11 @@ namespace cg
         ImGui::SliderFloat("Move Speed", &g_move_speed, 0.01f, 1.0f);           // Плъзгач за скорост на движение
         ImGui::SliderFloat("Rotation Speed", &g_rotation_speed, 0.5f, 10.0f);   // Плъзгач за скорост на завъртане
         ImGui::SliderFloat("Walk Speed", &cg::robot.walk_speed, 0.5f, 5.0f);    // Плъзгач за скорост на анимацията
+
+		// Секция за скалиране на робота
+        ImGui::Separator();
+        ImGui::Text("Scale Controls:");
+        ImGui::SliderFloat3("Robot Scale", &cg::robot.scale[0], 0.1f, 3.0f);
 
         // Секция за контрол на размерите на частите на робота
         ImGui::Separator();
@@ -113,6 +125,7 @@ namespace cg
             // Нулиране на позицията и ротацията
             cg::robot.position = glm::vec3(0.0f, 0.0f, 0.0f);   // Център на сцената, леко надолу
             cg::robot.rotation = glm::vec3(0.0f);               // Без завъртане
+			cg::robot.scale = glm::vec3(1.0f);                  // Без скалиране
 
             // Възстановяване на размерите на основните части
             cg::robot.body_size = glm::vec3(0.8f, 1.2f, 0.4f);  // Стандартен размер на тялото
@@ -136,6 +149,18 @@ namespace cg
             cg::robot.head_bob = 0.0f;         // Без движение на главата
             cg::robot.antenna_wiggle = 0.0f;   // Без движение на антената
             cg::robot.walk_speed = 2.0f;       // Стандартна скорост на анимация
+
+            // Нулиране на скоростите
+            g_move_speed = 0.1f;
+            g_rotation_speed = 2.0f;
+
+            if (ImGui::Button("Reset Rotation Only")) {
+                cg::robot.rotation = glm::vec3(0.0f);   // Нулиране само на завъртанията
+            }
+
+            if (ImGui::Button("Reset Scale Only")) {
+				cg::robot.scale = glm::vec3(1.0f);     // Нулиране само на скалирането
+            }
         }
 
         ImGui::End(); // Край на прозореца "Robot Controls"
