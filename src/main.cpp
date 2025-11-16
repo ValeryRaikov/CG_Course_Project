@@ -656,21 +656,21 @@ static void init(void)
     g_program = program;
 
     /*
-     * Set PVM matrix.
-     */
+	* Изертиране на началните матрици и параметри на светлината.
+    */
     set_model(program);
     set_view(program);
     set_projection(program);
 
     /*
-     * Set light parameters.
+	 * Задаване на параметрите на светлината.
      */
     set_light_pos(program);
     set_light_color(program);
 }
 
 /*
- * Draw a cuboid (scaled cube)
+ * Нарисуване на кубоид с дадени размери.
  */
 static void draw_cuboid(const glm::vec3& size)
 {
@@ -682,106 +682,103 @@ static void draw_cuboid(const glm::vec3& size)
 }
 
 /*
- * Draw the complete robot
+ * Изчертаване на робота.
  */
 static void draw_robot()
 {
     glm::mat4 original_model = g_model;
 
-    // Apply robot transformation
+	// Трансформации на робота
     g_model = glm::translate(g_model, cg::robot.position);
     g_model = glm::rotate(g_model, glm::radians(cg::robot.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-    // Hips
+	// Таз (на дъното на хълбоците)
     g_model = glm::translate(g_model, glm::vec3(0.0f, cg::robot.hip_size.y / 2, 0.0f));
     draw_cuboid(cg::robot.hip_size);
 
-    // Body (on top of hips)
+	// Тяло (на върха на хълбоците)
     glm::mat4 hips_model = g_model;
     g_model = glm::translate(g_model, glm::vec3(0.0f, cg::robot.hip_size.y / 2 + cg::robot.body_size.y / 2, 0.0f));
     draw_cuboid(cg::robot.body_size);
 
-    // Shoulders (on top of body) - FIXED: Make shoulders wider to match body
+	// Рамене (на върха на тялото)
     glm::mat4 body_model = g_model;
     g_model = glm::translate(g_model, glm::vec3(0.0f, cg::robot.body_size.y / 2 + cg::robot.shoulder_size.y / 2, 0.0f));
-    // Make shoulders wider to prevent thin neck look
     glm::vec3 shoulder_draw_size = glm::vec3(
-        cg::robot.body_size.x * 1.1f,  // Wider than body
+		cg::robot.body_size.x * 1.1f,  // Рамене по-широки от тялото
         cg::robot.shoulder_size.y,
-        cg::robot.body_size.z * 0.8f   // Slightly narrower in depth
+		cg::robot.body_size.z * 0.8f
     );
     draw_cuboid(shoulder_draw_size);
 
-    // Head (on top of shoulders)
+	// Глава (на върха на раменете)
     glm::mat4 shoulders_model = g_model;
     g_model = glm::translate(g_model, glm::vec3(0.0f, cg::robot.shoulder_size.y / 2 + cg::robot.head_size.y / 2, 0.0f));
     draw_cuboid(cg::robot.head_size);
 
-    // Eyes
+	// Очи
     glm::mat4 head_model = g_model;
-    g_model = glm::translate(g_model, glm::vec3(cg::robot.head_size.x / 4, cg::robot.head_size.y / 4, cg::robot.head_size.z / 2 + cg::robot.eye_size.z / 2));
+    g_model = glm::translate(g_model, glm::vec3(cg::robot.head_size.x / 4, cg::robot.head_size.y / 4, cg::robot.head_size.z / 2 + cg::robot.eye_size.z / 2));;
     draw_cuboid(cg::robot.eye_size);
 
     g_model = head_model;
     g_model = glm::translate(g_model, glm::vec3(-cg::robot.head_size.x / 4, cg::robot.head_size.y / 4, cg::robot.head_size.z / 2 + cg::robot.eye_size.z / 2));
     draw_cuboid(cg::robot.eye_size);
 
-    // Antenna
+	// Антена
     g_model = head_model;
     g_model = glm::translate(g_model, glm::vec3(0.0f, cg::robot.head_size.y / 2 + cg::robot.antenna_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.antenna_wiggle), glm::vec3(0.0f, 0.0f, 1.0f));
     draw_cuboid(cg::robot.antenna_size);
 
-    // Left Arm - FIXED: Position arms further out to avoid body overlap
+    // Лява ръка
     g_model = shoulders_model;
     g_model = glm::translate(g_model, glm::vec3(-shoulder_draw_size.x / 2 - cg::robot.arm_size.x / 2,
         0.0f, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.arm_swing), glm::vec3(1.0f, 0.0f, 0.0f));
-    // Move down to center the arm at the attachment point
     g_model = glm::translate(g_model, glm::vec3(0.0f, -cg::robot.arm_size.y / 2, 0.0f));
     draw_cuboid(cg::robot.arm_size);
 
-    // Left Forearm
+	// Лява предмишница
     g_model = glm::translate(g_model, glm::vec3(0.0f, -cg::robot.arm_size.y / 2 - cg::robot.forearm_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.forearm_swing), glm::vec3(1.0f, 0.0f, 0.0f));
     draw_cuboid(cg::robot.forearm_size);
 
-    // Right Arm - FIXED: Position arms further out to avoid body overlap
+	// Дясна ръка
     g_model = shoulders_model;
     g_model = glm::translate(g_model, glm::vec3(shoulder_draw_size.x / 2 + cg::robot.arm_size.x / 2,
         0.0f, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(-cg::robot.arm_swing), glm::vec3(1.0f, 0.0f, 0.0f));
-    // Move down to center the arm at the attachment point
     g_model = glm::translate(g_model, glm::vec3(0.0f, -cg::robot.arm_size.y / 2, 0.0f));
     draw_cuboid(cg::robot.arm_size);
 
-    // Right Forearm
+	// Дясна предмишница
     g_model = glm::translate(g_model, glm::vec3(0.0f, -cg::robot.arm_size.y / 2 - cg::robot.forearm_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(-cg::robot.forearm_swing), glm::vec3(1.0f, 0.0f, 0.0f));
     draw_cuboid(cg::robot.forearm_size);
 
-    // Left Leg
+	// Ляв крак
     g_model = hips_model;
     g_model = glm::translate(g_model, glm::vec3(-cg::robot.hip_size.x / 4,
         -cg::robot.hip_size.y / 2 - cg::robot.leg_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(-cg::robot.leg_swing), glm::vec3(1.0f, 0.0f, 0.0f));
     draw_cuboid(cg::robot.leg_size);
 
-    // Left Shin
+	// Лява подбедрица
     g_model = glm::translate(g_model, glm::vec3(0.0f, -cg::robot.leg_size.y / 2 - cg::robot.shin_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(-cg::robot.shin_swing), glm::vec3(1.0f, 0.0f, 0.0f));
     draw_cuboid(cg::robot.shin_size);
 
-    // Right Leg
+	// Десен крак
     g_model = hips_model;
     g_model = glm::translate(g_model, glm::vec3(cg::robot.hip_size.x / 4,
         -cg::robot.hip_size.y / 2 - cg::robot.leg_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.leg_swing), glm::vec3(1.0f, 0.0f, 0.0f));
     draw_cuboid(cg::robot.leg_size);
 
-    // Right Shin
+	// Дясна подбедрица
     g_model = glm::translate(g_model, glm::vec3(0.0f, -cg::robot.leg_size.y / 2 - cg::robot.shin_size.y / 2, 0.0f));
     g_model = glm::rotate(g_model, glm::radians(cg::robot.shin_swing), glm::vec3(1.0f, 0.0f, 0.0f));
     draw_cuboid(cg::robot.shin_size);
@@ -790,8 +787,9 @@ static void draw_robot()
 }
 
 /*
- * Draw starfield background
+ * Промяна на фона в звездна карта. (Това не е успешно реализирано!)
  */
+/*
 static void draw_starfield_background()
 {
     // Save current state
@@ -813,25 +811,26 @@ static void draw_starfield_background()
     g_model = original_model;
     set_model(g_program);
 }
+*/
 
 /*
- * Draw function.
+ * Функция за изрисуване на всеки кадър.
  */
 static void render(void)
 {
-    // Update walking animation
+	// Обновяване на анимациите за ходене
     static float time = 0.0f;
-    time += 0.05f;  // Reduced from 0.1f to 0.05f to slow down overall animation
+	time += 0.05f;  // намали за по-бързо движение (примерно 0.1)
 
-    // Main arm and leg swings - slower
+	// Движение на ръце и крака
     cg::robot.arm_swing = sin(time * cg::robot.walk_speed) * 30.0f;
     cg::robot.leg_swing = sin(time * cg::robot.walk_speed) * 25.0f;
 
-    // Forearms and shins - even slower than main limbs
-    cg::robot.forearm_swing = sin(time * cg::robot.walk_speed * 0.8f) * 15.0f;  // Reduced multiplier
-    cg::robot.shin_swing = sin(time * cg::robot.walk_speed * 0.7f) * 20.0f;     // Reduced multiplier
+	// Предмишници и подбедрици с по-бавна скорост от ръцете и краката
+    cg::robot.forearm_swing = sin(time * cg::robot.walk_speed * 0.8f) * 15.0f;  
+    cg::robot.shin_swing = sin(time * cg::robot.walk_speed * 0.7f) * 20.0f;     
 
-    // Head and antenna - keep their original speed for variety
+	// Глава и антена
     cg::robot.head_bob = sin(time * cg::robot.walk_speed * 2.0f) * 3.0f;
     cg::robot.antenna_wiggle = sin(time * cg::robot.walk_speed * 3.0f) * 10.0f;
 
@@ -839,7 +838,7 @@ static void render(void)
 }
 
 /*
- * Create window and begin drawing.
+ * Създаване на прозореца и рисуване на сцената.
  */
 static void run(void)
 {
@@ -851,8 +850,7 @@ static void run(void)
     init();
 
     /*
-     * Main loop.
-     * Runs every frame.
+	 * Главен цикъл
      */
     while (glfwWindowShouldClose(window) == 0)
     {
@@ -870,7 +868,7 @@ static void run(void)
     }
 
     /*
-     * Cleanup.
+	 * Почистващи операции
      */
     cg::cleanup_ImGui();
     cleanup_window(window);
@@ -879,7 +877,8 @@ static void run(void)
 int main(void)
 {
     /*
-     * Keep main function brief.
+	 * Извиква метода за стартиране на приложението.
+	 * Целта е да се запази основния main метод чист, кратък и ясен.
      */
     run();
 }
