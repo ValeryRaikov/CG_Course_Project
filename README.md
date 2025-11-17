@@ -13,7 +13,7 @@ Template project for computer graphics labs for TU Sofia.
 2. Open a terminal in your folder.
 3. Run:
     ```sh
-    git clone https://github.com/ValeryRaikov/CG_Course_Project/computer-graphics
+    git clone https://github.com/ValeryRaikov/CG_Course_Project
     ```
 
 ## Build
